@@ -1,8 +1,14 @@
 FROM maven:3.5.2-jdk-9 AS build
 
-COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app
-RUN mvn -f /usr/src/app/pom.xml -P production clean package
+#FROM maven:3.5.2-jdk-8-alpine AS MAVEN_TOOL_CHAIN
+COPY pom.xml /tmp/
+COPY src /tmp/src/
+WORKDIR /tmp/
+RUN mvn -P production clean package
+
+#COPY src /usr/src/app/src
+#COPY pom.xml /usr/src/app
+#RUN mvn -f /usr/src/app/pom.xml -P production clean package
 
 FROM openjdk:8-jre-alpine
 
@@ -12,7 +18,7 @@ ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS \
 
 # add directly the war
 #ADD *.war /app.war
-COPY --from=build /usr/src/app/target/back-sdk.war /usr/app/back-sdk.war
+COPY --from=build /tmp/target/back-sdk.war /tmp/back-sdk.war
 
 EXPOSE 8080
 CMD echo "The application will start in ${SLEEP_TIME}s..." && \
