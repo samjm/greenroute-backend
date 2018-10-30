@@ -1,10 +1,10 @@
-FROM maven:3.5.2-jdk-9 AS build
+FROM maven:3.5.2-jdk-8-alpine AS build
 
 #FROM maven:3.5.2-jdk-8-alpine AS MAVEN_TOOL_CHAIN
 COPY pom.xml /tmp/
 COPY src /tmp/src/
 WORKDIR /tmp/
-RUN mvn -P production clean package
+RUN mvn -P production package
 
 #COPY src /usr/src/app/src
 #COPY pom.xml /usr/src/app
